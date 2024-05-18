@@ -138,23 +138,27 @@ function checkUI() {
     }
 }
 
-// Event Listeners
-// Snaps to Input field
-document.addEventListener('keydown', (e) => {
-    if(e.key === '/' && e.target.tagName != 'INPUT'){
-        e.preventDefault();
-        itemInput.focus();
-    }
-});
-// Adds item on submit
-itemForm.addEventListener('submit', onAddItemSubmit);
-// Removes item on button click
-itemList.addEventListener('click', removeItem);
-// Removes all items on click of clearBtn
-clearBtn.addEventListener('click', clearItems);
-// Check for filter
-itemFilter.addEventListener('input', filterItems);
-document.addEventListener('DOMContentLoaded',displayItems);
+// Initialize app
+function init() {
+    // Event Listeners
+    // Snaps to Input field
+    document.addEventListener('keydown', (e) => {
+        if(e.key === '/' && e.target.tagName != 'INPUT'){
+            e.preventDefault();
+            itemInput.focus();
+        }
+    });
+    // Adds item on submit
+    itemForm.addEventListener('submit', onAddItemSubmit);
+    // Removes item on button click
+    itemList.addEventListener('click', removeItem);
+    // Removes all items on click of clearBtn
+    clearBtn.addEventListener('click', clearItems);
+    // Check for filter
+    itemFilter.addEventListener('input', filterItems);
+    document.addEventListener('DOMContentLoaded',displayItems);
 
+    checkUI();
+}
 
-checkUI();
+init();
