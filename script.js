@@ -2,6 +2,7 @@ const itemForm = document.getElementById('item-form');
 const itemInput = document.getElementById('item-input');
 const itemList = document.getElementById('item-list');
 const clearBtn = document.getElementById('clear');
+const itemFilter = document.getElementById('filter');
 
 // Add Element
 function addItem(e) {
@@ -20,7 +21,10 @@ function addItem(e) {
     const button = createButton('remove-item btn-link text-red');
     li.appendChild(button);
 
+    // Add li to DOM
     itemList.appendChild(li);
+
+    checkUI();
 
     itemInput.value = '';
 }
@@ -42,19 +46,37 @@ function createIcon(classes) {
 function removeItem(e) {
     // If the parent element's class list contains 'remove-item'
     if (e.target.parentElement.classList.contains('remove-item')) {
-        e.target.parentElement.parentElement.remove();
+        if (confirm(`Are you sure you want to remove ${e.target.parentElement.parentElement.innerText}?`)){
+            e.target.parentElement.parentElement.remove();
+
+            checkUI();
+        }
     }
 }
 
 // Remove all Items
 function clearItems(e) {
-    while (itemList.firstChild) {
-        itemList.removeChild(itemList.firstChild);
+    if (confirm('Are you sure you want to clear everything?')){
+        while (itemList.firstChild) {
+            itemList.removeChild(itemList.firstChild);
+        }
+        checkUI();
+    }
+}
+
+// Checks UI to hide filter and clear button
+function checkUI() {
+    const items = itemList.querySelectorAll('li');
+    if (items.length === 0) {
+        clearBtn.style.display = 'none';
+        itemFilter.style.display = 'none';
+    } else {
+        clearBtn.style.display = 'block';
+        itemFilter.style.display = 'block';
     }
 }
 
 // Event Listeners
-
 // Snaps to Input field
 document.addEventListener('keydown', (e) => {
     if(e.key === '/'){
@@ -62,10 +84,11 @@ document.addEventListener('keydown', (e) => {
         itemInput.focus();
     }
 });
-
 // Adds item on submit
 itemForm.addEventListener('submit', addItem);
 // Removes item on button click
 itemList.addEventListener('click', removeItem);
 // Removes all items on click of clearBtn
 clearBtn.addEventListener('click', clearItems);
+
+checkUI();
