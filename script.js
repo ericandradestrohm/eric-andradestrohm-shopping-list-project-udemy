@@ -16,7 +16,7 @@ function addItem(e) {
 
     // Create the list item
     const li = document.createElement('li');
-    li.appendChild(document.createTextNode(newItem));
+    li.appendChild(document.createTextNode(capitalizeFirstLetter(newItem)));
 
     const button = createButton('remove-item btn-link text-red');
     li.appendChild(button);
@@ -41,6 +41,13 @@ function createIcon(classes) {
     return icon;
 
 }
+function capitalizeFirstLetter(string) {
+    if (string.length === 0){
+        return string;
+    }
+
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+}
 
 // Remove Items
 function removeItem(e) {
@@ -64,6 +71,22 @@ function clearItems(e) {
     }
 }
 
+// Filters items as you type
+function filterItems(e) {
+    const items = itemList.querySelectorAll('li');
+    const text = e.target.value.toLowerCase();
+    
+    items.forEach(item => {
+        const itemName = item.innerText.toLowerCase();
+        
+        if (itemName.indexOf(text) === -1) {
+            item.style.display = 'none';
+        } else {
+            item.style.display = 'flex';
+        }
+    });
+}
+
 // Checks UI to hide filter and clear button
 function checkUI() {
     const items = itemList.querySelectorAll('li');
@@ -79,7 +102,7 @@ function checkUI() {
 // Event Listeners
 // Snaps to Input field
 document.addEventListener('keydown', (e) => {
-    if(e.key === '/'){
+    if(e.key === '/' && e.target.tagName != 'INPUT'){
         e.preventDefault();
         itemInput.focus();
     }
@@ -90,5 +113,9 @@ itemForm.addEventListener('submit', addItem);
 itemList.addEventListener('click', removeItem);
 // Removes all items on click of clearBtn
 clearBtn.addEventListener('click', clearItems);
+// Check for filter
+itemFilter.addEventListener('input', filterItems);
+
+
 
 checkUI();
