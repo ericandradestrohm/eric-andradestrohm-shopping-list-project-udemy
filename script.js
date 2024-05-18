@@ -88,24 +88,41 @@ function getItemsFromStorage() {
     return itemsFromStorage;
 }
 
-// Remove Items
-function removeItem(e) {
-    // If the parent element's class list contains 'remove-item'
-    if (e.target.parentElement.classList.contains('remove-item')) {
-        if (confirm(`Are you sure you want to remove ${e.target.parentElement.parentElement.innerText}?`)){
-            e.target.parentElement.parentElement.remove();
 
-            checkUI();
-        }
+function onClickItem(e) {
+    if (e.target.parentElement.classList.contains('remove-item')) {
+        removeItem(e.target.parentElement.parentElement);
     }
 }
+// Remove Items
+function removeItem(item) {
+    if (confirm(`Are you sure you want to remove ${item.innerText}?`)){ 
+        // Remove item from DOM
+        item.remove();
+        // Remove item from Storage
+        removeItemFromStorage(item.textContent);
+        checkUI();
+    }
+}
+function removeItemFromStorage(item) {
+    let itemsFromStorage = getItemsFromStorage();
 
+    // Filter our item to be removed
+    itemsFromStorage = itemsFromStorage.filter((i) => i !== item);
+
+    // Re-set to localstorage
+    localStorage.setItem('items', JSON.stringify(itemsFromStorage));
+}
 // Remove all Items
 function clearItems(e) {
     if (confirm('Are you sure you want to clear everything?')){
         while (itemList.firstChild) {
             itemList.removeChild(itemList.firstChild);
         }
+        
+        // Clear from localstorage
+        localStorage.removeItem('items');
+
         checkUI();
     }
 }
@@ -151,7 +168,7 @@ function init() {
     // Adds item on submit
     itemForm.addEventListener('submit', onAddItemSubmit);
     // Removes item on button click
-    itemList.addEventListener('click', removeItem);
+    itemList.addEventListener('click', onClickItem);
     // Removes all items on click of clearBtn
     clearBtn.addEventListener('click', clearItems);
     // Check for filter
