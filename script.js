@@ -11,7 +11,7 @@ let isEditMode = false;
 function displayItems() {
     const itemsFromStorage = getItemsFromStorage();
     itemsFromStorage.forEach(item => addItemToDOM(item));
-    checkUI();
+    resetUI();
 }
 
 // Add Element
@@ -23,6 +23,16 @@ function onAddItemSubmit(e) {
         alert('Please enter an item');
         return;
     }
+    // Check for edit mode
+    if (isEditMode) {
+        const itemToEdit = itemList.querySelector('.edit-mode');
+
+        removeItemFromStorage(itemToEdit.textContent);
+        itemToEdit.classList.remove('edit-mode');
+        itemToEdit.remove();
+        isEditMode = false;
+    }
+
     newItem = capitalizeFirstLetter(newItem);
     
     // Create item DOM element
@@ -30,7 +40,7 @@ function onAddItemSubmit(e) {
     // Add item to localStorage
     addItemToStorage(newItem);
 
-    checkUI();
+    resetUI();
 
     itemInput.value = '';
 }
@@ -118,7 +128,7 @@ function removeItem(item) {
         item.remove();
         // Remove item from Storage
         removeItemFromStorage(item.textContent);
-        checkUI();
+        resetUI();
     }
 }
 function removeItemFromStorage(item) {
@@ -140,7 +150,7 @@ function clearItems(e) {
         // Clear from localstorage
         localStorage.removeItem('items');
 
-        checkUI();
+        resetUI();
     }
 }
 
@@ -161,7 +171,8 @@ function filterItems(e) {
 }
 
 // Checks UI to hide filter and clear button
-function checkUI() {
+function resetUI() {
+    itemInput.value = '';
     const items = itemList.querySelectorAll('li');
     if (items.length === 0) {
         clearBtn.style.display = 'none';
@@ -170,6 +181,10 @@ function checkUI() {
         clearBtn.style.display = 'block';
         itemFilter.style.display = 'block';
     }
+    
+    formBtn.innerHTML = '<i class="fa-solid fa-plus"></i> Add Item';
+    formBtn.style.backgroundColor = '#333';
+    isEditMode = false;
 }
 
 // Initialize app
@@ -192,7 +207,7 @@ function init() {
     itemFilter.addEventListener('input', filterItems);
     document.addEventListener('DOMContentLoaded',displayItems);
 
-    checkUI();
+    resetUI();
 }
 
 init();
