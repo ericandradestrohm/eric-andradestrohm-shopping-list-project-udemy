@@ -5,7 +5,7 @@ const clearBtn = document.getElementById('clear');
 const itemFilter = document.getElementById('filter');
 
 // Add Element
-function addItem(e) {
+function onAddItemSubmit(e) {
     e.preventDefault();
     const newItem = itemInput.value;
     // Basic input validation
@@ -13,20 +13,44 @@ function addItem(e) {
         alert('Please enter an item');
         return;
     }
+    const properItem = capitalizeFirstLetter(newItem);
+    
+    // Create item DOM element
+    addItemToDOM(properItem);
+    // Add item to localStorage
+    addItemToStorage(properItem);
 
+    checkUI();
+
+    itemInput.value = '';
+}
+function addItemToDOM(item) {
     // Create the list item
     const li = document.createElement('li');
-    li.appendChild(document.createTextNode(capitalizeFirstLetter(newItem)));
+    li.appendChild(document.createTextNode(item));
 
     const button = createButton('remove-item btn-link text-red');
     li.appendChild(button);
 
     // Add li to DOM
     itemList.appendChild(li);
+}
+function addItemToStorage(item){
+    let itemsFromStorage;
 
-    checkUI();
+    if (localStorage.getItem(`items`) === null) {
+        // If storage is empty, make itemsFromStorage an empty array
+        itemsFromStorage = [];
+    } else {
+        // If there are items, then parse the items back to an array
+        itemsFromStorage = JSON.parse(localStorage.getItem('items'));
+    }
 
-    itemInput.value = '';
+    // Add new item to array
+    itemsFromStorage.push(item);
+
+    // Convert to JSON  string and put back in local storage
+    localStorage.setItem(`items`, JSON.stringify(itemsFromStorage));
 }
 function createButton(classes) {
     const button = document.createElement('button');
@@ -108,7 +132,7 @@ document.addEventListener('keydown', (e) => {
     }
 });
 // Adds item on submit
-itemForm.addEventListener('submit', addItem);
+itemForm.addEventListener('submit', onAddItemSubmit);
 // Removes item on button click
 itemList.addEventListener('click', removeItem);
 // Removes all items on click of clearBtn
