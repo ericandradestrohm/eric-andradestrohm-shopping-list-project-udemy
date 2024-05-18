@@ -18,6 +18,7 @@ function displayItems() {
 function onAddItemSubmit(e) {
     e.preventDefault();
     let newItem = itemInput.value;
+    newItem = capitalizeFirstLetter(newItem);
     // Basic input validation
     if(newItem === '') {
         alert('Please enter an item');
@@ -31,9 +32,13 @@ function onAddItemSubmit(e) {
         itemToEdit.classList.remove('edit-mode');
         itemToEdit.remove();
         isEditMode = false;
+    } else {
+        if (checkIfItemExists(newItem)) {
+            alert('Item already exists!');
+            return;
+        }
     }
 
-    newItem = capitalizeFirstLetter(newItem);
     
     // Create item DOM element
     addItemToDOM(newItem);
@@ -108,6 +113,12 @@ function onClickItem(e) {
     } else {
         setItemToEdit(e.target);
     }
+}
+
+// Duplicate Item check
+function checkIfItemExists(item) {
+    const itemsFromStorage = getItemsFromStorage();
+    return itemsFromStorage.includes(item);
 }
 
 function setItemToEdit(item) {
