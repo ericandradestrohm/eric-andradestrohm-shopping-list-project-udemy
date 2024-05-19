@@ -61,24 +61,32 @@ function addItemToDOM(item) {
     const li = document.createElement('li');
     li.appendChild(document.createTextNode(item));
 
-    const button = createButton('remove-item btn-link text-red');
-    li.appendChild(button);
+    const editButton = createButton('btn-link', 'fa-solid fa-pen');
+    editButton.id = 'edit-button';
+    const removeButton = createButton('remove-item btn-link text-red', 'fa-solid fa-xmark');
 
+    const div = document.createElement('div');
+    div.appendChild(editButton);
+    div.appendChild(removeButton);
+
+    li.appendChild(div);
     // Add li to DOM
     itemList.appendChild(li);
 }
-function createButton(classes) {
+
+function createButton(classes, iconClass) {
     const button = document.createElement('button');
     button.className = classes;
-    const icon = createIcon("fa-solid fa-xmark");
+    const icon = createIcon(iconClass);
+
     button.appendChild(icon);
+
     return button;
 }
 function createIcon(classes) {
     const icon = document.createElement('i');
     icon.className = classes;
     return icon;
-
 }
 
 function addItemToStorage(item){

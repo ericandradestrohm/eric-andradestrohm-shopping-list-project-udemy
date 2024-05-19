@@ -80,7 +80,7 @@ header h1 {
   background-color: transparent;
   color: #333;
   border: none;
-  padding: 0;
+  padding: 0 3px 0 3px;
   cursor: pointer;
 }
 
@@ -102,6 +102,10 @@ header h1 {
 
 .text-red {
   color: red;
+}
+
+.text-black {
+  color: black;
 }
 
 /* Items */
